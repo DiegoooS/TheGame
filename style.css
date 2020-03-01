@@ -1,0 +1,199 @@
+html {
+    box-sizing: border-box;
+    font-size: 20px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    overflow: hidden;
+    font-family: 'Major Mono Display', monospace;
+    color: lightskyblue;
+    font-size: 25px;
+}
+
+.game__map {
+    min-height: 800px;
+    min-width: 900px;
+    display: none;
+    flex-direction: column;
+}
+
+.enemy__fly__area {
+    height: 90vh;
+}
+
+.enemy__row {
+    width: 70%;
+    height: 150px;
+    transition: all 0.01s ease-in ;
+    position: absolute;
+}
+
+.player__statistics {
+    height: 15vh;
+    width: 30vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+    padding: 5px;
+}
+
+.player__score__row {
+    height: 5vh;
+    width: 30vh;
+    display: flex;
+    align-items: center;
+    text-shadow: 0 0 10px lightskyblue;
+}
+
+.player__health__bar {
+    height: 2vh;
+    width: 30vh;
+    border: 1px solid lightskyblue;
+    box-shadow: 0 0 10px lightskyblue;
+    z-index: 2;
+}
+
+.health__bar__progress {
+    height: 100%;
+    width: 100%;
+    background-image: linear-gradient(
+        45deg, lightblue 25%, 
+        white 25%, white 50%, 
+        lightblue 50%, lightblue 75%,
+        white 75%, white); 
+    transition: all 0.4s ease-in;
+}
+
+.player__fly__area {
+    height: 10vh;
+    min-width: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player {
+    justify-self: end;
+    position: relative;
+    transition: 0.01s linear;
+    width: 10vh;
+    height: 20vh;
+    z-index: 1;
+    top: 30px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.starship__model {
+    height: 100px;
+    width: 100px;
+    filter: hue-rotate(360deg);
+    z-index: 2;
+}
+
+.starship__fire {
+    height: 60px;
+    width: 30px;
+    position: absolute;
+    filter:blur(0.5px) invert(65%) drop-shadow(2px 15px 10px lightskyblue);
+    transform: rotateX(180deg);
+    top: 80px;
+}
+
+.enemy {
+    position: absolute;
+    transform: rotateX(180deg);
+    background-image: url('Images/Starships_Models/starship_model1.png');
+    background-position: center;
+    background-size: cover;
+    height: 100px;
+    width: 100px;
+    filter: invert(100%);
+    z-index: 1;
+}
+
+.boss {
+    background-image: url('Images/Starships_Models/starship_model2.png') !important;
+    height: 300px !important;
+    width: 300px !important;
+    filter: invert(0%) !important;
+}
+
+.turn__left {
+    transform: rotateY(-35deg);
+}
+
+.turn__right {
+    transform: rotateY(35deg);
+}
+
+.star {
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    transition: all 2s ease 0s;
+    filter: brightness(300%) drop-shadow(2px 2px 10px white);
+    opacity: 0.86;
+}
+
+.bullet {
+    height: 25px;
+    width: 4px;
+    background-color: lightblue;
+    border-radius: 40%;
+    position: absolute;
+    align-self: center;
+    transition: all 0.01s ease 0s;
+    filter: drop-shadow(2px 15px 10px lightskyblue);
+}
+
+.enemy__bullet {
+    height: 25px;
+    width: 4px;
+    background-color: lightcoral;
+    border-radius: 50%;
+    position: absolute;
+    align-self: center;
+    transition: all 0.01s ease 0s;
+    filter: drop-shadow(2px 15px 10px lightcoral);
+}
+
+.game__over {
+    height: 100vh;
+    width: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+    flex-direction: column;
+    text-shadow: 0 0 10px lightskyblue;
+}
+
+.menu {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+    flex-direction: column;
+    text-shadow: 0 0 10px lightskyblue;
+}
+
+.start__game {
+    margin-top: 150px;
+}
+
+.menu__button {
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.menu__button:hover {
+    text-shadow: 0 0 15px lightskyblue;
+    filter: brightness(120%);
+}
