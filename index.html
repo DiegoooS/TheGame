@@ -25,6 +25,14 @@
                     </div>
                 </div>
                 <div class="enemy__row"></div>
+                <div class="anya__dialog__box__container">
+                    <div class="anya__dialog__box">
+                        <div>
+                            <img src="Images/Characters/anya.png" alt="AnyaPortrait">
+                        </div>
+                        <span class="anya__dialog__content">welcome</span>
+                    </div>
+                </div>
             </div>
             <div class="player__fly__area">
                 <div class="player">
@@ -36,19 +44,67 @@
 
         <div class="game__over">
             <span>game over</span>
-            <span>press f5 to play again</span>
+            <span class="score"></span>
+            <button class="back__to__menu">back to menu</button>
+        </div>
+        <div class="game__win">
+            <span>you Win!</span>
+            <span class="score"></span>
+            <button class="back__to__menu">back to menu</button>
         </div>
         <div class="menu">
             <h1>THE GAME</h1>
             <span class="start__game menu__button">start game</span>
-            <span class="constrols menu__button">constrols</span>
+            <span class="controls menu__button">constrols</span>
             <span class="credits menu__button">credits</span>
+        </div>
+
+        <div class="controls__menu">
+            <div class="controls__menu__table__theme">
+                <span class="exit__controls">x</span>
+                <p>controls</p>
+                <table>
+                    <tr>
+                        <th>button</th>
+                        <th>action</th>
+                    </tr>
+                    <tr>
+                        <td>left arrow</td>
+                        <td>move left</td>
+                    </tr>
+                    <tr>
+                        <td>right arrow</td>
+                        <td>move right</td>
+                    </tr>
+                    <tr>
+                        <td>space</td>
+                        <td>pew pew pew</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="credits__menu">
+
         </div>
         <audio class="shootSound" src="Music/shoot_2.mp3"></audio>
         <audio class="shipBlastSound" src="Music/ship_blast_1.mp3"></audio>
         <audio class="enemy__shoot__sound" src="Music/enemy_shoot_1.mp3"></audio>
         <audio class="player__hitted__sound" src="Music/player_hitted_1.mp3"></audio>
         <audio class="battle_theme_sound_1" src="Music/battle_theme_1.mp3"></audio>
+        <audio class="ship__arive_sound__1" src="Music/ship__arive_sound__1.mp3"></audio>
+
+        <audio class="female__counting" src="Voices/female__counting.wav"></audio>
+        <audio class="female__enemyspooted" src="Voices/female__enemyspooted.wav"></audio>
+        <audio class="female__gameover" src="Voices/female__gameover.wav"></audio>
+        <audio class="female__getready" src="Voices/female__getready.wav"></audio>
+        <audio class="female__greetings" src="Voices/female__greetings.wav"></audio>
+        <audio class="female__weareunderattack" src="Voices/female__weareunderattack.wav"></audio>
+        <audio class="female__lowonhealth" src="Voices/female__lowonhealth.wav"></audio>
+        <audio class="female__wow" src="Voices/female__wow.wav"></audio>
+        <audio class="female__wow__2" src="Voices/female__wow__2.wav"></audio>
+        <audio class="female__all__done" src="Voices/female__alldone.wav"></audio>
+        <audio class="female__objective__complete" src="Voices/female__objectivecomplete.wav"></audio>
 
         <script src="vanilla.js" async defer></script>
     </body>

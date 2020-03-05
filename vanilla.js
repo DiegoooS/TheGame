@@ -4,11 +4,20 @@ const playerFlyZone = document.querySelector('.player__fly__area');
 const enemyFlyZone = document.querySelector('.enemy__fly__area');
 const enemyRow = document.querySelector('.enemy__row');
 const gameMap = document.querySelector('.game__map');
+const playerStatistics = document.querySelector('.player__statistics');
 const scoreBox = document.querySelector('.player__score__row');
 const playerHealthBarProgress = document.querySelector('.health__bar__progress');
 const gameOverBox = document.querySelector('.game__over');
+const gameWinBox =document.querySelector('.game__win');
 const menu = document.querySelector('.menu');
 const startGameButton = document.querySelector('.start__game');
+const controlsButton = document.querySelector('.controls');
+const controlMenu = document.querySelector('.controls__menu');
+const exitControls = document.querySelector('.exit__controls');
+const anyaDialogBoxContainer = document.querySelector('.anya__dialog__box__container');
+const anyaDialogContent = document.querySelector('.anya__dialog__content');
+const backToMenuButton = document.querySelectorAll('.back__to__menu');
+const scoreEndBox = document.querySelectorAll('.score');
 let enemy = document.querySelectorAll('.enemy');
 
 //Game Variables
@@ -22,7 +31,20 @@ const blastSound = document.querySelector('.shipBlastSound');
 const enemyShootSound = document.querySelector('.enemy__shoot__sound');
 const playerHittedSound = document.querySelector('.player__hitted__sound');
 const audioTheme_1 = document.querySelector('.battle_theme_sound_1');
-audioTheme_1.volume = 0.5;
+const enemyArriveSound = document.querySelector('.ship__arive_sound__1');
+
+//Voices
+const femaleCounting = document.querySelector('.female__counting');
+const femaleEnemyspooted = document.querySelector('.female__enemyspooted');
+const femaleGameover = document.querySelector('.female__gameover');
+const femaleGetready = document.querySelector('.female__getready');
+const femaleGreetings = document.querySelector('.female__greetings');
+const femaleWeAreUnderAttack = document.querySelector('.female__weareunderattack');
+const femaleLowOnHealth = document.querySelector('.female__lowonhealth')
+const femaleWow = document.querySelector('.female__wow');
+const femaleWow2 = document.querySelector('.female__wow__2');
+const femaleAllDone = document.querySelector('.female__all__done');
+const femaleObjectiveComplete = document.querySelector('.female__objective__complete');
 
 //Intervals
 let intervals;
@@ -31,20 +53,39 @@ let enemyAnimationInterval;
 
 //FUNCTIONS
 function startGame() {
+    audioTheme_1.volume = 0.3;
+    anyaDialogBoxContainer.style.display = 'none';
+    playerStatistics.style.display = 'flex';
+    wave = 1;
+
+
+    waveGenerator();
+}
+
+function intro() {
+    audioTheme_1.currentTime = 0;
+    audioTheme_1.loop = true;
+    audioTheme_1.volume = 0.1;
+    audioTheme_1.play();
+
     shootSound.currentTime = 0;
     shootSound.play();
 
+    setTimeout(function() {femaleGreetings.play(); anyaDialogBoxContainer.style.display = 'flex';  }, 2000);
+    setTimeout(function() {
+        femaleCounting.play();
+        anyaDialogContent.innerHTML = 'three';
+        setTimeout(function() {anyaDialogContent.innerHTML = 'two'}, 1000);
+        setTimeout(function() {anyaDialogContent.innerHTML = 'one'}, 2000);
+        setTimeout(function() {anyaDialogContent.innerHTML = 'go!'}, 3000);
+    }, 4000);
+
+    starInterval = setInterval(starGenerator, 500);
+    intervals = setInterval(intervalConstroller, 10);
+
+    playerStatistics.style.display = 'none';
     menu.style.display = 'none';
     gameMap.style.display = 'flex';
-
-    audioTheme_1.currentTime = 0;
-    audioTheme_1.loop = true;
-    audioTheme_1.play();
-
-    wave = 1;
-    waveGenerator();
-    intervals = setInterval(intervalConstroller, 10);
-    starInterval = setInterval(starGenerator, 500);
 }
 
 let = playerPosition = 0;
@@ -104,6 +145,7 @@ function shootAnimation() {
     });
 }
 
+let gameEnd = false;
 function checkIfEnemyHitted(bullet) {
     enemy.forEach(enemyShip => {
         enemy = document.querySelectorAll('.enemy');
@@ -121,7 +163,8 @@ function checkIfEnemyHitted(bullet) {
                     enemyShip.parentNode.removeChild(enemyShip);
                     enemy = document.querySelectorAll('.enemy');
 
-                    gameOver();
+                    gameEnd = true;
+                    gameWin();
                 }
             } else {
                 score += 10;
@@ -130,7 +173,7 @@ function checkIfEnemyHitted(bullet) {
                 enemyShip.parentNode.removeChild(enemyShip);
                 enemy = document.querySelectorAll('.enemy');
             }
-            if (enemy.length === 0) {
+            if (enemy.length === 0 && !gameEnd) {
                 clearInterval(enemyAnimationInterval);
                 enemyRow.style.top = `-115px`;
                 wave++;
@@ -222,21 +265,30 @@ function enemyShootAnimation() {
     });
 }
 
+let sayLowOnHealth = true;
 function checkIfPlayerHittes(enemyRocket) {
     if((enemyRocket.offsetTop >= player.offsetTop) && ((enemyRocket.offsetLeft >= player.offsetLeft) && (enemyRocket.offsetLeft <= (player.offsetLeft + player.offsetWidth)))) {
-        enemyRocket.parentNode.removeChild(enemyRocket);
+        //if statement to prevent from console  error
+        if (enemyRocket.parentNode != null){
+            enemyRocket.parentNode.removeChild(enemyRocket);
 
-        playerHittedSound.currentTime = 0;
-        playerHittedSound.play();
+            playerHittedSound.currentTime = 0;
+            playerHittedSound.play();
 
-        playerHealth -= 15;
-        if (playerHealth <= 0) {
-            playerHealth = 0;
-            gameOver();
-        } 
-        playerHealthBarProgress.style.width = `${playerHealth}%`;
+            playerHealth -= 15;
+            if (playerHealth <= 0) {
+                playerHealth = 0;
+                gameOver();
+            }
+            if (playerHealth <=50 && sayLowOnHealth) {
+                console.log(sayLowOnHealth)
+                callVoice(femaleLowOnHealth, 'low on health');
+                sayLowOnHealth = false;
+            }
+            if (playerHealth > 50) sayLowOnHealth = true;
 
-        
+            playerHealthBarProgress.style.width = `${playerHealth}%`;
+        }
     }
 }
 
@@ -245,12 +297,54 @@ function gameOver() {
     clearInterval(starInterval);
     clearInterval(enemyAnimationInterval);
     gameMap.style.display = 'none';
+    scoreEndBox[0].innerHTML = `your score: ${score}`;
     gameOverBox.style.display = 'flex';
+
+    femaleGameover.play();
 
     //put audio off
     audioTheme_1.loop = false;
     audioTheme_1.pause();
     audioTheme_1.currentTime = 0;
+}
+
+function gameWin() {
+    clearInterval(intervals);
+    clearInterval(starInterval);
+    clearInterval(enemyAnimationInterval);
+    gameMap.style.display = 'none';
+    scoreEndBox[1].innerHTML = `your score: ${score}`;
+    gameWinBox.style.display = 'flex';
+
+    femaleObjectiveComplete.play();
+
+    //put audio off
+    audioTheme_1.loop = false;
+    audioTheme_1.pause();
+    audioTheme_1.currentTime = 0;
+}
+
+function openControls() {
+    shootSound.currentTime = 0;
+    shootSound.play();
+
+    controlMenu.style.display = 'flex';
+    menu.style.display = 'none';
+}
+
+function exitFromControls() {
+    shootSound.currentTime = 0;
+    shootSound.play();
+
+    controlMenu.style.display = 'none';
+    menu.style.display = 'flex';
+}
+
+function callVoice(voiceSample, dialogContent) {
+    anyaDialogContent.innerHTML = `${dialogContent}`;
+    anyaDialogBoxContainer.style.display = 'flex';
+    voiceSample.play();
+    setTimeout(function() {anyaDialogBoxContainer.style.display = 'none'}, 1500)
 }
 
 
@@ -259,11 +353,14 @@ function enemyWave(numberOfRows, enemySpeed = 2, enemyChance = 1000 , setPositio
     enemyAnimationSpeed = enemySpeed;
     chanceOfEnemyShoot = enemyChance;
 
+    enemyArriveSound.currentTime = 0;
+    enemyArriveSound.play();
+
     let positionX = -400;
     //set enemies for animation
     enemyRow.style.top = `${startPositionY}px`;
     //Timeout to prevent from showing enemies before animation
-    setTimeout(generate, 1000);
+    setTimeout(generate, 100);
     function generate() {
         enemyAnimationInterval = setInterval(enemyAnimation, 10);
         for (let i = 0; i < 5 ; i++) {
@@ -278,14 +375,19 @@ function enemyWave(numberOfRows, enemySpeed = 2, enemyChance = 1000 , setPositio
 }
 
 function bossWave(enemySpeed = 2, enemyChance = 1000 , setPositionY = 15 , startPositionY = -315, lifeOfBoss = 50) {
+    callVoice(femaleGetready, 'get ready');
+
     enemyAnimationSpeed = enemySpeed;
     chanceOfEnemyShoot = enemyChance;
     bossLife = lifeOfBoss;
 
+    enemyArriveSound.currentTime = 0;
+    enemyArriveSound.play();
+
     //set enemies for animation
     enemyRow.style.top = `${startPositionY}px`;
 
-    setTimeout(generate, 1000);
+    setTimeout(generate, 100);
     function generate() {
         enemyAnimationInterval = setInterval(enemyAnimation, 10);
         let positionY = setPositionY;
@@ -298,19 +400,27 @@ function bossWave(enemySpeed = 2, enemyChance = 1000 , setPositionY = 15 , start
 let wave;
 function waveGenerator() {
     if (wave === 1) enemyWave(1 , 2 , 1000 , 15 , -115);
-    if (wave === 2) enemyWave(2);
+    if (wave === 2) {enemyWave(2); callVoice(femaleWow2, 'woo');}
     if (wave === 3) enemyWave(3);
     if (wave === 4) enemyWave(3);
-    if (wave === 5) enemyWave(4 , 3);
+    if (wave === 5) {enemyWave(4 , 3); callVoice(femaleWow, 'wow')}
     if (wave === 6) enemyWave(5, 4);
     if (wave === 7) enemyWave(2 , 10 , 500);
-    if (wave === 8) enemyWave(2 , 10 , 400);
+    if (wave === 8) {enemyWave(2 , 10 , 400); callVoice(femaleAllDone, 'all done');}
     if (wave === 9) enemyWave(3 , 10 , 500);
     if (wave === 10) enemyWave(1 , 10, 400 , 515 , -115 );
-    if (wave === 11) enemyWave(1 , 10, 400 , 415 , -115 );
+    if (wave === 11) {enemyWave(1 , 10, 400 , 415 , -115 ); callVoice(femaleWow2, 'woo');}
     if (wave === 12) enemyWave(1 , 13, 200 , 315 , -115 );
     if (wave === 13) enemyWave(2 , 15, 200 , 215 , -115 );
-    if (wave === 14) bossWave(7, 20 , 115 , -115, 25 );
+    if (wave === 14) {enemyWave(3 , 15, 200 , 115 , -115 ); callVoice(femaleEnemyspooted, 'enemy spooted');}
+    if (wave === 15) enemyWave(4 , 15, 200 , 15 , -115 );
+    if (wave === 16) enemyWave(1 , 20, 150 , 215 , -115 );
+    if (wave === 17) {enemyWave(2 , 20, 150 , 315 , -115 ); callVoice(femaleWow, 'wow');}
+    if (wave === 18) enemyWave(3 , 20, 150 , 315 , -115 );
+    if (wave === 19) enemyWave(1 , 20, 150 , 415 , -115 );
+    if (wave === 20) {enemyWave(3 , 20, 100 , 215 , -115 ); callVoice(femaleAllDone, 'all done');}
+    if (wave === 21) enemyWave(2 , 20, 100 , 315 , -115 );
+    if (wave === 22) bossWave(7, 20 , 115 , -115, 25 );
 }
 
 window.addEventListener('keydown', (e) => {
@@ -327,4 +437,14 @@ window.addEventListener('keyup' , () => {
     shouldPlayerShoot = true;
 });
 
-startGameButton.addEventListener('click', startGame );
+controlsButton.addEventListener('click', openControls);
+
+startGameButton.addEventListener('click', intro );
+
+exitControls.addEventListener('click', exitFromControls);
+
+femaleCounting.addEventListener('ended', startGame);
+
+backToMenuButton.forEach(button => button.addEventListener('click', () => {
+    window.location.reload(); 
+}));
